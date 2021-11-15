@@ -21,12 +21,10 @@ import java.awt.event.*;
 public class Board implements ActionListener{ //allows the class to be setup for an Action listener
 
     private boolean whiteTurn = true;
-    private JPanel boardPanel = new JPanel();
-    private GridLayout gridBoard = new GridLayout(8,8);
-    private JFrame board = new JFrame();
     private Square[][] square = new Square[8][8];
     private int currentX =-1;
     private int currentY =-1;
+    private BoardView view = new BoardView();
     /**
      *
      * Initialises an 8x8 board followed by adding 64 squares in the relevant
@@ -37,20 +35,8 @@ public class Board implements ActionListener{ //allows the class to be setup for
     }
 
     public void setUpGameBoard() {
-        setUpUI();
         setUpBoard();
-        setBoardVisible();
-    }
-
-    public void setBoardVisible() {
-        board.setContentPane(boardPanel); //sets the panel to the board frame so the board is correctly initialised
-        board.setVisible(true); //sets the board visible
-    }
-
-    public void setUpUI(){
-        board.setSize(800,800); //size of board. image is 100x100 and 8x8 layout so 800x800
-        board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //when closed program shuts down
-        boardPanel.setLayout(gridBoard); //sets the 8x8 board layout. an added component is arranged in 8x8 layout
+        view.setBoardVisible();
     }
 
     public void setUpBoard(){
@@ -59,7 +45,7 @@ public class Board implements ActionListener{ //allows the class to be setup for
                 //Set square[y][x] to something we choose
                 square[y][x] = getStartingSquare(y, x);
                 square[y][x].getButton().addActionListener(this);
-                boardPanel.add(square[y][x].getButton());
+                view.addBoardPanel(square[y][x].getButton());
             }
         }
     }
