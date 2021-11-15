@@ -54,8 +54,8 @@ public class Board implements ActionListener{ //allows the class to be setup for
     }
 
     public void setUpBoard(){
-        for(int y = 0; y < 8; y++) {
-            for(int x = 0; x < 8; x++) {
+        for(int y = 0; y < square.length; y++) {
+            for(int x = 0; x < square.length; x++) {
                 //Set square[y][x] to something we choose
                 square[y][x] = getStartingSquare(y, x);
                 square[y][x].getButton().addActionListener(this);
@@ -75,9 +75,9 @@ public class Board implements ActionListener{ //allows the class to be setup for
     }
 
     public Square getStartingSquareContainingPiece(int yPos, int xPos) {
-        if (yPos < 3)
+        if (yPos < (square.length / 2) - 1)
             return new Square(yPos, xPos, "WHITE", "RED");
-        else if (yPos > 4)
+        else if (yPos > square.length / 2)
             return new Square(yPos, xPos, "WHITE", "WHITE");
         else
             return new Square(yPos, xPos, "WHITE", "NONE");
@@ -88,8 +88,8 @@ public class Board implements ActionListener{ //allows the class to be setup for
     }
 
     public void clearSelected() {
-        for(int y = 0; y < 8; y++) {
-            for(int x = 0; x < 8; x++) {
+        for(int y = 0; y < square.length; y++) {
+            for(int x = 0; x < square.length; x++) {
                 if(square[y][x].getCurrentPiece().equals("SELECTED")){
                     square[y][x].setCurrentPiece("NONE");
                 }
@@ -123,7 +123,7 @@ public class Board implements ActionListener{ //allows the class to be setup for
                 if (next.getXPos() > current.getXPos()) {
                     int nextX = next.getXPos() + 1;
                     int nextY = next.getYPos() - 1;
-                    if (nextX < 8 && nextY >= 0)
+                    if (nextX < square.length && nextY >= 0)
                         markSelectableSquares(next, square[nextY][nextX], currentPiece);
                 }
                 else if(next.getXPos() < current.getXPos()){
@@ -143,13 +143,13 @@ public class Board implements ActionListener{ //allows the class to be setup for
                 if(next.getXPos() > current.getXPos()) {
                     int nextX = next.getXPos() + 1;
                     int nextY = next.getYPos() + 1;
-                    if(nextX < 8 && nextY < 8)
+                    if(nextX < 8 && nextY < square.length)
                         markSelectableSquares(next, square[nextY][nextX], currentPiece);
                 }
                 else if(next.getXPos() < current.getXPos()) {
                     int nextX = next.getXPos() - 1;
                     int nextY = next.getYPos() + 1;
-                    if(nextX >= 0 && nextY < 8)
+                    if(nextX >= 0 && nextY < square.length)
                         markSelectableSquares(next, square[nextY][nextX], currentPiece);
                 }
             }
@@ -167,7 +167,7 @@ public class Board implements ActionListener{ //allows the class to be setup for
             if(xToCheck >= 0)
                 markSelectableSquares(square[currentY][currentX], square[yToCheck][xToCheck], square[currentY][currentX].getCurrentPiece());
             xToCheck = currentX + 1;    //Check in right direction
-            if(xToCheck <= 7)
+            if(xToCheck <= square.length - 1)
                 markSelectableSquares(square[currentY][currentX], square[yToCheck][xToCheck], square[currentY][currentX].getCurrentPiece());
         }
     }
@@ -204,7 +204,7 @@ public class Board implements ActionListener{ //allows the class to be setup for
         square[moveFromY][moveFromX].setCurrentPiece("NONE");
         if(pieceToMove.equals("WHITE") && moveToY == 0)
             square[moveToY][moveToX].setCurrentPiece("KINGWHITE");
-        else if(pieceToMove.equals("RED") && moveToY == 7)
+        else if(pieceToMove.equals("RED") && moveToY == square.length - 1)
             square[moveToY][moveToX].setCurrentPiece("KINGRED");
         else
             square[moveToY][moveToX].setCurrentPiece(pieceToMove);
@@ -212,10 +212,10 @@ public class Board implements ActionListener{ //allows the class to be setup for
     }
 
     public void actionPerformed(ActionEvent e) {
-        for(int y = 0; y < 8; y++) {
-            for(int x = 0; x < 8; x++) {
+        for(int y = 0; y < square.length; y++) {
+            for(int x = 0; x < square.length; x++) {
                 if(square[y][x].getButton()==e.getSource()) {
-                    if(square[y][x].getCurrentPiece().equals("SELECTED")) {
+                    if(square[y][x].squareIsSelected()) {
                         this.playMove(currentY, currentX, y, x);//If clicked we want to make a move if current piece is selected.
                         clearSelected();
                     }

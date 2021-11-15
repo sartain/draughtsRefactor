@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.util.Objects;
 
 /**
  * The square class represents a clickable button containing an image to represent a tile on a draughts
@@ -144,9 +145,12 @@ public class Square
     * @return A bool value depending on whether the move is valid or not
     *
      */
-    public boolean moveToUniversal(Square next)
-    {
+    public boolean moveToUniversal(Square next) {
         return next.getXPos() == this.getXPos() + 1 || next.getXPos() == this.getXPos() - 1;
+    }
+
+    public boolean squareIsSelected() {
+        return Objects.equals(this.getCurrentPiece(), "SELECTED");
     }
 
     @Override
