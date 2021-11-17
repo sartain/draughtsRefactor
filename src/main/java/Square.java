@@ -29,7 +29,7 @@ public class Square
     private JButton squareButton = new JButton(squareWhite);
     private int xPosition=0;
     private int yPosition=0;
-    private String currentPiece;
+    private Piece currentPiece;
     private String colour; //makes it easier to know what colour the square tile is
 
     /**
@@ -39,7 +39,7 @@ public class Square
      * @param c String for the state and currentPiece a square holds. WHITE = white piece. RED = red piece. NONE = no piece. SELECTED = highlighted tile in which a valid move can be made to.
      * @param p The colour of the square. WHITE or BLACK.
      */
-    public Square(int y, int x, String c, String p) //initialises piece in correct starting position
+    public Square(int y, int x, String c, Piece p) //initialises piece in correct starting position
     {
         xPosition = x;
         yPosition = y;
@@ -48,13 +48,13 @@ public class Square
         switch (colour) {
             case "WHITE":
                 switch (currentPiece) {
-                    case "WHITE":
+                    case WHITE:
                         squareButton.setIcon(tileWhite);
                         break;
-                    case "RED":
+                    case RED:
                         squareButton.setIcon(tileRed);
                         break;
-                    case "NONE":
+                    case EMPTY:
                         squareButton.setIcon(squareWhite);
                         break;
                 }
@@ -101,7 +101,7 @@ public class Square
     /**
      * @return a string of the current piece on a square.
      */
-    public String getCurrentPiece()
+    public Piece getCurrentPiece()
     {
         return currentPiece;
     }
@@ -111,32 +111,34 @@ public class Square
      * @param piece A string to change the current piece. WHITE = white piece. NONE = no piece. RED = red piece. SELECTED = selected piece. KINGWHITE = king white piece. KINGRED = king red piece.
      */
 
-    public void setCurrentPiece(String piece)
+    public void setCurrentPiece(Piece piece)
     {
         switch (piece) {
-            case "WHITE":
-                this.squareButton.setIcon(tileWhite);
-                currentPiece = "WHITE";
-                break;
-            case "NONE":
+            case EMPTY:
                 this.squareButton.setIcon(squareWhite);
-                currentPiece = "NONE";
+                currentPiece = Piece.EMPTY;
                 break;
-            case "RED":
+            case WHITE:
+                this.squareButton.setIcon(tileWhite);
+                currentPiece = Piece.WHITE;
+                break;
+            case RED:
                 this.squareButton.setIcon(tileRed);
-                currentPiece = "RED";
+                currentPiece = Piece.RED;
                 break;
-            case "SELECTED":
+            case SELECTED:
                 this.squareButton.setIcon(squareSelected);
-                currentPiece = "SELECTED";
+                currentPiece = Piece.SELECTED;
                 break;
-            case "KINGWHITE":
+            case KINGWHITE:
                 this.squareButton.setIcon(kingWhite);
-                currentPiece = "KINGWHITE";
+                currentPiece = Piece.KINGWHITE;
                 break;
-            case "KINGRED":
+            case KINGRED:
                 this.squareButton.setIcon(kingRed);
-                currentPiece = "KINGRED";
+                currentPiece = Piece.KINGRED;
+                break;
+            default:
                 break;
         }
     }
@@ -150,7 +152,7 @@ public class Square
     }
 
     public boolean squareIsSelected() {
-        return Objects.equals(this.getCurrentPiece(), "SELECTED");
+        return this.getCurrentPiece() == Piece.SELECTED;
     }
 
     @Override

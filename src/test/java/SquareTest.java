@@ -189,19 +189,19 @@ public class SquareTest {
     @ParameterizedTest
     @MethodSource("getWhitePieces")
     public void testPieceIsWhite(Square squareToTest) {
-        assertEquals("WHITE", squareToTest.getCurrentPiece());
+        assertEquals(Piece.WHITE, squareToTest.getCurrentPiece());
     }
 
     @ParameterizedTest
     @MethodSource("getRedPieces")
     public void testPieceIsRed(Square squareToTest) {
-        assertEquals("RED", squareToTest.getCurrentPiece());
+        assertEquals(Piece.RED, squareToTest.getCurrentPiece());
     }
 
     @ParameterizedTest
     @MethodSource("getBlankPieces")
     public void testPieceIsNone(Square squareToTest) {
-        assertEquals("NONE", squareToTest.getCurrentPiece());
+        assertEquals(Piece.EMPTY, squareToTest.getCurrentPiece());
     }
 
     @ParameterizedTest
@@ -219,7 +219,7 @@ public class SquareTest {
     //Used purely for testing purposes
     public boolean canMoveToNoSwitch(Square current, Square next)
     {
-        if((current.getCurrentPiece().equals("WHITE") || current.getCurrentPiece().equals("KINGRED")) && next.getCurrentPiece().equals("NONE"))
+        if((current.getCurrentPiece() == Piece.WHITE || current.getCurrentPiece() == Piece.KINGRED) && next.getCurrentPiece() == Piece.EMPTY)
         {
             if(next.getYPos()==current.getYPos()-1)
             {
@@ -227,7 +227,7 @@ public class SquareTest {
             }
         }
 
-        else if((current.getCurrentPiece().equals("RED") || current.getCurrentPiece().equals("KINGWHITE")) && next.getCurrentPiece().equals("NONE"))
+        else if((current.getCurrentPiece() == Piece.RED || current.getCurrentPiece() == Piece.KINGWHITE) && next.getCurrentPiece() == Piece.EMPTY)
         {
             if(next.getYPos()==current.getYPos()+1)
             {
@@ -300,8 +300,8 @@ public class SquareTest {
         board.actionPerformed(clickCurrentSquare);
         Square moveFrom = board.getSquare()[currentSquare.getYPos()][currentSquare.getXPos()];
         Square moveTo = board.getSquare()[potentialMove_1.getYPos()][potentialMove_1.getXPos()];
-        assertEquals("WHITE", moveFrom.getCurrentPiece());
-        assertEquals("SELECTED", moveTo.getCurrentPiece());
+        assertEquals(Piece.WHITE, moveFrom.getCurrentPiece());
+        assertEquals(Piece.SELECTED, moveTo.getCurrentPiece());
     }
 
     @ParameterizedTest
@@ -318,8 +318,8 @@ public class SquareTest {
         board.actionPerformed(clickSquareToMoveTo);
         Square moveFrom = board.getSquare()[currentSquare.getYPos()][currentSquare.getXPos()];
         Square moveTo = board.getSquare()[potentialMove_1.getYPos()][potentialMove_1.getXPos()];
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("WHITE", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.WHITE, moveTo.getCurrentPiece());
     }
 
     //Cannot play red move before a white move (turn based game)
@@ -337,8 +337,8 @@ public class SquareTest {
         board.actionPerformed(clickSquareToMoveTo);
         Square moveFrom = board.getSquare()[currentSquare.getYPos()][currentSquare.getXPos()];
         Square moveTo = board.getSquare()[potentialMove_1.getYPos()][potentialMove_1.getXPos()];
-        assertEquals("RED", moveFrom.getCurrentPiece());
-        assertEquals("NONE", moveTo.getCurrentPiece());
+        assertEquals(Piece.RED, moveFrom.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveTo.getCurrentPiece());
     }
 
     @Test
@@ -365,14 +365,14 @@ public class SquareTest {
         board.actionPerformed(clickCurrentSquare);
         Square moveFrom = board.getSquare()[fromY][fromX];
         Square moveTo = board.getSquare()[moveY][moveX];
-        assertEquals("RED", moveFrom.getCurrentPiece());
-        assertEquals("SELECTED", moveTo.getCurrentPiece());
+        assertEquals(Piece.RED, moveFrom.getCurrentPiece());
+        assertEquals(Piece.SELECTED, moveTo.getCurrentPiece());
         clickSquareToMoveTo = new ActionEvent(moveToButton, 1, "click");
         board.actionPerformed(clickSquareToMoveTo);
         moveFrom = board.getSquare()[fromY][fromX];
         moveTo = board.getSquare()[moveY][moveX];
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("RED", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.RED, moveTo.getCurrentPiece());
         //SECOND MOVE NOW PERFORMED
         fromY = 4;
         fromX = 2;
@@ -383,8 +383,8 @@ public class SquareTest {
         board.actionPerformed(clickCurrentSquare);
         moveFrom = board.getSquare()[fromY][fromX];
         moveTo = board.getSquare()[moveY][moveX];
-        assertEquals("WHITE", moveFrom.getCurrentPiece());
-        assertEquals("SELECTED", moveTo.getCurrentPiece());
+        assertEquals(Piece.WHITE, moveFrom.getCurrentPiece());
+        assertEquals(Piece.SELECTED, moveTo.getCurrentPiece());
     }
 
     public Board playMoveGivenPlacesToClick(int fromY, int fromX, int moveY, int moveX, Board board) {
@@ -425,9 +425,9 @@ public class SquareTest {
         Square moveFrom = board.getSquare()[whitePieceFromY][whitePieceFromX];
         Square moveTo = board.getSquare()[redPieceFromY][redPieceFromX];
         Square redToTake = board.getSquare()[redPieceY][redPieceX];
-        assertEquals("NONE", redToTake.getCurrentPiece());
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("WHITE", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, redToTake.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.WHITE, moveTo.getCurrentPiece());
     }
 
     @Test
@@ -444,9 +444,9 @@ public class SquareTest {
         Square moveFrom = board.getSquare()[fromY][fromX];
         Square moveTo = board.getSquare()[toY][toX];
         Square redToTake = board.getSquare()[pieceTakenY][pieceTakenX];
-        assertEquals("NONE", redToTake.getCurrentPiece());
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("RED", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, redToTake.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.RED, moveTo.getCurrentPiece());
     }
 
     @Test
@@ -463,9 +463,9 @@ public class SquareTest {
         Square moveFrom = board.getSquare()[fromY][fromX];
         Square moveTo = board.getSquare()[toY][toX];
         Square redToTake = board.getSquare()[pieceTakenY][pieceTakenX];
-        assertEquals("NONE", redToTake.getCurrentPiece());
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("WHITE", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, redToTake.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.WHITE, moveTo.getCurrentPiece());
     }
 
     @Test
@@ -483,9 +483,9 @@ public class SquareTest {
         Square moveFrom = board.getSquare()[fromY][fromX];
         Square moveTo = board.getSquare()[toY][toX];
         Square redToTake = board.getSquare()[pieceTakenY][pieceTakenX];
-        assertEquals("NONE", redToTake.getCurrentPiece());
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("RED", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, redToTake.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.RED, moveTo.getCurrentPiece());
     }
 
     @Test
@@ -514,11 +514,11 @@ public class SquareTest {
         Square redTaken2 = board.getSquare()[r2Y][r2X];
         Square redTaken3 = board.getSquare()[r3Y][r3X];
         Square moveTo = board.getSquare()[toY][toX];
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("NONE", redTaken1.getCurrentPiece());
-        assertEquals("NONE", redTaken2.getCurrentPiece());
-        assertEquals("NONE", redTaken3.getCurrentPiece());
-        assertEquals("KINGWHITE", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.EMPTY, redTaken1.getCurrentPiece());
+        assertEquals(Piece.EMPTY, redTaken2.getCurrentPiece());
+        assertEquals(Piece.EMPTY, redTaken3.getCurrentPiece());
+        assertEquals(Piece.KINGWHITE, moveTo.getCurrentPiece());
     }
 
     @Test
@@ -546,11 +546,11 @@ public class SquareTest {
         Square redTaken2 = board.getSquare()[w2Y][w2X];
         Square redTaken3 = board.getSquare()[w3Y][w3X];
         Square moveTo = board.getSquare()[toY][toX];
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("NONE", redTaken1.getCurrentPiece());
-        assertEquals("NONE", redTaken2.getCurrentPiece());
-        assertEquals("NONE", redTaken3.getCurrentPiece());
-        assertEquals("KINGRED", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.EMPTY, redTaken1.getCurrentPiece());
+        assertEquals(Piece.EMPTY, redTaken2.getCurrentPiece());
+        assertEquals(Piece.EMPTY, redTaken3.getCurrentPiece());
+        assertEquals(Piece.KINGRED, moveTo.getCurrentPiece());
     }
 
     @Test
@@ -569,8 +569,8 @@ public class SquareTest {
         board = playMoveGivenPlacesToClick(0, 6, 1, 5, board); //WHITE
         Square moveFrom = board.getSquare()[0][6];
         Square moveTo = board.getSquare()[1][5];
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("KINGWHITE", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.KINGWHITE, moveTo.getCurrentPiece());
     }
 
     @Test
@@ -590,9 +590,9 @@ public class SquareTest {
         Square moveFrom = board.getSquare()[0][6];
         Square pieceTaken = board.getSquare()[1][5];
         Square moveTo = board.getSquare()[2][4];
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("NONE", pieceTaken.getCurrentPiece());
-        assertEquals("KINGWHITE", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.EMPTY, pieceTaken.getCurrentPiece());
+        assertEquals(Piece.KINGWHITE, moveTo.getCurrentPiece());
     }
 
     @Test
@@ -610,8 +610,8 @@ public class SquareTest {
         board = playMoveGivenPlacesToClick(7, 1, 6, 2, board); //KINGRED
         Square moveFrom = board.getSquare()[7][1];
         Square moveTo = board.getSquare()[6][2];
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("KINGRED", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.KINGRED, moveTo.getCurrentPiece());
     }
 
     @Test
@@ -630,9 +630,9 @@ public class SquareTest {
         Square moveFrom = board.getSquare()[7][1];
         Square pieceTaken = board.getSquare()[6][2];
         Square moveTo = board.getSquare()[5][3];
-        assertEquals("NONE", moveFrom.getCurrentPiece());
-        assertEquals("NONE", pieceTaken.getCurrentPiece());
-        assertEquals("KINGRED", moveTo.getCurrentPiece());
+        assertEquals(Piece.EMPTY, moveFrom.getCurrentPiece());
+        assertEquals(Piece.EMPTY, pieceTaken.getCurrentPiece());
+        assertEquals(Piece.KINGRED, moveTo.getCurrentPiece());
     }
     /*
     ToDo:

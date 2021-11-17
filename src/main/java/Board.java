@@ -1,5 +1,3 @@
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
 /**
@@ -22,8 +20,8 @@ public class Board implements ActionListener{ //allows the class to be setup for
 
     private boolean whiteTurn = true;
     private Square[][] square = new Square[8][8];
-    private int currentX =-1;
-    private int currentY =-1;
+    private int currentX = -1;
+    private int currentY = -1;
     private BoardView view = new BoardView();
     /**
      *
@@ -56,17 +54,17 @@ public class Board implements ActionListener{ //allows the class to be setup for
             return getStartingSquareContainingPiece(yPos, xPos);
         }
         else {
-            return new Square(yPos, xPos, "BLACK", "NONE");
+            return new Square(yPos, xPos, "BLACK", Piece.EMPTY);
         }
     }
 
     public Square getStartingSquareContainingPiece(int yPos, int xPos) {
         if (yPos < (square.length / 2) - 1)
-            return new Square(yPos, xPos, "WHITE", "RED");
+            return new Square(yPos, xPos, "WHITE", Piece.RED);
         else if (yPos > square.length / 2)
-            return new Square(yPos, xPos, "WHITE", "WHITE");
+            return new Square(yPos, xPos, "WHITE", Piece.WHITE);
         else
-            return new Square(yPos, xPos, "WHITE", "NONE");
+            return new Square(yPos, xPos, "WHITE", Piece.EMPTY);
     }
 
     public Square[][] getSquare(){
@@ -74,38 +72,38 @@ public class Board implements ActionListener{ //allows the class to be setup for
     }
 
     public void clearSelected() {
-        for(int y = 0; y < square.length; y++) {
-            for(int x = 0; x < square.length; x++) {
-                if(square[y][x].getCurrentPiece().equals("SELECTED")){
-                    square[y][x].setCurrentPiece("NONE");
+        for (Square[] squares : square) {
+            for (int x = 0; x < square.length; x++) {
+                if (squares[x].getCurrentPiece() == Piece.SELECTED) {
+                    squares[x].setCurrentPiece(Piece.EMPTY);
                 }
             }
         }
     }
-
-    public boolean canTakePiece(String currentPiece, Square next) {
-        if(currentPiece.equals("WHITE") || currentPiece.equals("KINGWHITE"))
-            return next.getCurrentPiece().equals("RED") || next.getCurrentPiece().equals("KINGRED");
-        else if(currentPiece.equals("RED") || currentPiece.equals("KINGRED"))
-            return next.getCurrentPiece().equals("WHITE") || next.getCurrentPiece().equals("KINGWHITE");
+    
+    public boolean canKeepJumping(Piece currentPiece, Square next) {
+        if(currentPiece == Piece.WHITE || currentPiece == Piece.KINGWHITE)
+            return next.getCurrentPiece() == Piece.RED || next.getCurrentPiece() == Piece.KINGRED;
+        else if(currentPiece == Piece.RED || currentPiece == Piece.KINGRED)
+            return next.getCurrentPiece() == Piece.WHITE || next.getCurrentPiece() == Piece.KINGWHITE;
         return false;
     }
 
     public boolean validTurn() {
         if(whiteTurn)
-            return square[currentY][currentX].getCurrentPiece().equals("WHITE") || square[currentY][currentX].getCurrentPiece().equals("KINGWHITE");
+            return square[currentY][currentX].getCurrentPiece() == Piece.WHITE || square[currentY][currentX].getCurrentPiece() == Piece.KINGWHITE;
         else
-            return square[currentY][currentX].getCurrentPiece().equals("RED") || square[currentY][currentX].getCurrentPiece().equals("KINGRED");
+            return square[currentY][currentX].getCurrentPiece() == Piece.RED || square[currentY][currentX].getCurrentPiece() == Piece.KINGRED;
     }
 
-    public void markSelectableSquares(Square current, Square next, String currentPiece)
+    public void markSelectableSquares(Square current, Square next, Piece currentPiece)
     {
-        if((currentPiece.equals("WHITE") || currentPiece.equals("KINGRED")))
+        if((currentPiece == Piece.WHITE || currentPiece == Piece.KINGRED))
         {
-            if (next.getCurrentPiece().equals("NONE")) {
-                next.setCurrentPiece("SELECTED");
+            if (next.getCurrentPiece() == Piece.EMPTY) {
+                next.setCurrentPiece(Piece.SELECTED);
             }
-            else if(canTakePiece(currentPiece, next)) {
+            else if(canKeepJumping(currentPiece, next)) {
                 if (next.getXPos() > current.getXPos()) {
                     int nextX = next.getXPos() + 1;
                     int nextY = next.getYPos() - 1;
@@ -120,12 +118,12 @@ public class Board implements ActionListener{ //allows the class to be setup for
                 }
             }
         }
-        else if((currentPiece.equals("RED") || currentPiece.equals("KINGWHITE")))
+        else if((currentPiece == Piece.RED || currentPiece == Piece.KINGWHITE))
         {
-            if (next.getCurrentPiece().equals("NONE")) {
-                next.setCurrentPiece("SELECTED");
+            if (next.getCurrentPiece() == Piece.EMPTY) {
+                next.setCurrentPiece(Piece.SELECTED);
             }
-            else if(canTakePiece(currentPiece, next)) {
+            else if(canKeepJumping(currentPiece, next)) {
                 if(next.getXPos() > current.getXPos()) {
                     int nextX = next.getXPos() + 1;
                     int nextY = next.getYPos() + 1;
@@ -145,7 +143,7 @@ public class Board implements ActionListener{ //allows the class to be setup for
     public void getMoveOptions() {
         if(validTurn()) {
             int yDirection = 1;
-            if(whiteTurn && square[currentY][currentX].getCurrentPiece().equals("WHITE") || !whiteTurn && square[currentY][currentX].getCurrentPiece().equals("KINGRED")) {
+            if(whiteTurn && square[currentY][currentX].getCurrentPiece() == Piece.WHITE || !whiteTurn && square[currentY][currentX].getCurrentPiece() == Piece.KINGRED) {
                 yDirection = -yDirection;
             }
             int yToCheck = currentY + yDirection;
@@ -160,38 +158,38 @@ public class Board implements ActionListener{ //allows the class to be setup for
 
     public void playMove(int moveFromY, int moveFromX, int moveToY, int moveToX) {
         int piecesToTake = Math.abs(moveFromX - moveToX) - 1;
-        String pieceToMove = square[moveFromY][moveFromX].getCurrentPiece();
+        Piece pieceToMove = square[moveFromY][moveFromX].getCurrentPiece();
         if(piecesToTake >= 0) {
             for(int i = piecesToTake; i > 0; i --) {
                 //RIGHT MOVE
                 if(moveFromX - moveToX < 0) {
                     //RIGHT MOVE DOWNWARDS
                     if(moveFromY < moveToY) {
-                        square[moveFromY + i][moveFromX + i].setCurrentPiece("NONE");
+                        square[moveFromY + i][moveFromX + i].setCurrentPiece(Piece.EMPTY);
                     }
                     //RIGHT MOVE UPWARDS
                     else {
-                        square[moveFromY - i][moveFromX + i].setCurrentPiece("NONE");
+                        square[moveFromY - i][moveFromX + i].setCurrentPiece(Piece.EMPTY);
                     }
                 }
                 //LEFT MOVE
                 else{
                     //LEFT MOVE DOWNWARDS
                     if(moveFromY < moveToY) {
-                        square[moveFromY + i][moveFromX - i].setCurrentPiece("NONE");
+                        square[moveFromY + i][moveFromX - i].setCurrentPiece(Piece.EMPTY);
                     }
                     //LEFT MOVE UPWARDS
                     else {
-                        square[moveFromY - i][moveFromX - i].setCurrentPiece("NONE");
+                        square[moveFromY - i][moveFromX - i].setCurrentPiece(Piece.EMPTY);
                     }
                 }
             }
         }
-        square[moveFromY][moveFromX].setCurrentPiece("NONE");
-        if(pieceToMove.equals("WHITE") && moveToY == 0)
-            square[moveToY][moveToX].setCurrentPiece("KINGWHITE");
-        else if(pieceToMove.equals("RED") && moveToY == square.length - 1)
-            square[moveToY][moveToX].setCurrentPiece("KINGRED");
+        square[moveFromY][moveFromX].setCurrentPiece(Piece.EMPTY);
+        if(pieceToMove == Piece.WHITE && moveToY == 0)
+            square[moveToY][moveToX].setCurrentPiece(Piece.KINGWHITE);
+        else if(pieceToMove == Piece.RED && moveToY == square.length - 1)
+            square[moveToY][moveToX].setCurrentPiece(Piece.KINGRED);
         else
             square[moveToY][moveToX].setCurrentPiece(pieceToMove);
         whiteTurn = !whiteTurn;
