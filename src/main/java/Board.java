@@ -96,25 +96,26 @@ public class Board implements ActionListener{ //allows the class to be setup for
             return square[currentY][currentX].getCurrentPiece() == Piece.RED || square[currentY][currentX].getCurrentPiece() == Piece.KINGRED;
     }
 
-    public void highlightAvailableMoves(Square current, Square next, Piece currentPiece)
-    {
+    public void highlightAvailableMoves(Square current, Square next, Piece currentPiece) {
         if((currentPiece == Piece.WHITE || currentPiece == Piece.KINGRED))
         {
-            if (next.getCurrentPiece() == Piece.EMPTY) {
-                next.setCurrentPiece(Piece.SELECTED);
-            }
-            else if(pieceCanKeepJumping(currentPiece, next)) {
+            highlightMoveIfEmpty(next);
+            if(pieceCanKeepJumping(currentPiece, next)) {
                 highlightAvailableMovesWhilstJumping(current, next, currentPiece, true);
             }
         }
         else if((currentPiece == Piece.RED || currentPiece == Piece.KINGWHITE))
         {
-            if (next.getCurrentPiece() == Piece.EMPTY) {
-                next.setCurrentPiece(Piece.SELECTED);
-            }
-            else if(pieceCanKeepJumping(currentPiece, next)) {
+            highlightMoveIfEmpty(next);
+            if(pieceCanKeepJumping(currentPiece, next)) {
                 highlightAvailableMovesWhilstJumping(current, next, currentPiece, false);
             }
+        }
+    }
+
+    public void highlightMoveIfEmpty(Square pieceToCheck) {
+        if (pieceToCheck.getCurrentPiece() == Piece.EMPTY) {
+            pieceToCheck.setCurrentPiece(Piece.SELECTED);
         }
     }
 
