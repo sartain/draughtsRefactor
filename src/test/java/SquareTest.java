@@ -652,8 +652,8 @@ public class SquareTest {
         - Test king red when at end = Done
         - Test king white can move backwards = Done
         - Test king red can move backwards = Done
-        - Test king red can take piece
-        - Test king white can take piece
+        - Test king red can take piece = Done
+        - Test king white can take piece = Done
      */
 
 }

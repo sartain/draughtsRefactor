@@ -81,7 +81,7 @@ public class Board implements ActionListener{ //allows the class to be setup for
         }
     }
     
-    public boolean canKeepJumping(Piece currentPiece, Square next) {
+    public boolean pieceCanKeepJumping(Piece currentPiece, Square next) {
         if(currentPiece == Piece.WHITE || currentPiece == Piece.KINGWHITE)
             return next.getCurrentPiece() == Piece.RED || next.getCurrentPiece() == Piece.KINGRED;
         else if(currentPiece == Piece.RED || currentPiece == Piece.KINGRED)
@@ -96,26 +96,15 @@ public class Board implements ActionListener{ //allows the class to be setup for
             return square[currentY][currentX].getCurrentPiece() == Piece.RED || square[currentY][currentX].getCurrentPiece() == Piece.KINGRED;
     }
 
-    public void markSelectableSquares(Square current, Square next, Piece currentPiece)
+    public void highlightAvailableMoves(Square current, Square next, Piece currentPiece)
     {
         if((currentPiece == Piece.WHITE || currentPiece == Piece.KINGRED))
         {
             if (next.getCurrentPiece() == Piece.EMPTY) {
                 next.setCurrentPiece(Piece.SELECTED);
             }
-            else if(canKeepJumping(currentPiece, next)) {
-                if (next.getXPos() > current.getXPos()) {
-                    int nextX = next.getXPos() + 1;
-                    int nextY = next.getYPos() - 1;
-                    if (nextX < square.length && nextY >= 0)
-                        markSelectableSquares(next, square[nextY][nextX], currentPiece);
-                }
-                else if(next.getXPos() < current.getXPos()){
-                    int nextX = next.getXPos() - 1;
-                    int nextY = next.getYPos() - 1;
-                    if (nextX >= 0 && nextY >= 0)
-                        markSelectableSquares(next, square[nextY][nextX], currentPiece);
-                }
+            else if(pieceCanKeepJumping(currentPiece, next)) {
+                highlightAvailableMovesWhilstJumping(current, next, currentPiece, true);
             }
         }
         else if((currentPiece == Piece.RED || currentPiece == Piece.KINGWHITE))
@@ -123,19 +112,37 @@ public class Board implements ActionListener{ //allows the class to be setup for
             if (next.getCurrentPiece() == Piece.EMPTY) {
                 next.setCurrentPiece(Piece.SELECTED);
             }
-            else if(canKeepJumping(currentPiece, next)) {
-                if(next.getXPos() > current.getXPos()) {
-                    int nextX = next.getXPos() + 1;
-                    int nextY = next.getYPos() + 1;
-                    if(nextX < 8 && nextY < square.length)
-                        markSelectableSquares(next, square[nextY][nextX], currentPiece);
-                }
-                else if(next.getXPos() < current.getXPos()) {
-                    int nextX = next.getXPos() - 1;
-                    int nextY = next.getYPos() + 1;
-                    if(nextX >= 0 && nextY < square.length)
-                        markSelectableSquares(next, square[nextY][nextX], currentPiece);
-                }
+            else if(pieceCanKeepJumping(currentPiece, next)) {
+                highlightAvailableMovesWhilstJumping(current, next, currentPiece, false);
+            }
+        }
+    }
+
+    public void highlightAvailableMovesWhilstJumping(Square current, Square next, Piece currentPiece, boolean moveUpwards) {
+        if (next.getXPos() > current.getXPos()) {
+            int nextX = next.getXPos() + 1;
+            if(moveUpwards) {
+                int nextY = next.getYPos() - 1;
+                if (nextX < square.length && nextY >= 0)
+                    highlightAvailableMoves(next, square[nextY][nextX], currentPiece);
+            }
+            else {
+                int nextY = next.getYPos() + 1;
+                if(nextX < 8 && nextY < square.length)
+                    highlightAvailableMoves(next, square[nextY][nextX], currentPiece);
+            }
+        }
+        else if(next.getXPos() < current.getXPos()){
+            int nextX = next.getXPos() - 1;
+            if(moveUpwards) {
+                int nextY = next.getYPos() - 1;
+                if (nextX >= 0 && nextY >= 0)
+                    highlightAvailableMoves(next, square[nextY][nextX], currentPiece);
+            }
+            else {
+                int nextY = next.getYPos() + 1;
+                if(nextX >= 0 && nextY < square.length)
+                    highlightAvailableMoves(next, square[nextY][nextX], currentPiece);
             }
         }
     }
@@ -149,10 +156,10 @@ public class Board implements ActionListener{ //allows the class to be setup for
             int yToCheck = currentY + yDirection;
             int xToCheck = currentX - 1;    //Check in left direction
             if(xToCheck >= 0)
-                markSelectableSquares(square[currentY][currentX], square[yToCheck][xToCheck], square[currentY][currentX].getCurrentPiece());
+                highlightAvailableMoves(square[currentY][currentX], square[yToCheck][xToCheck], square[currentY][currentX].getCurrentPiece());
             xToCheck = currentX + 1;    //Check in right direction
             if(xToCheck <= square.length - 1)
-                markSelectableSquares(square[currentY][currentX], square[yToCheck][xToCheck], square[currentY][currentX].getCurrentPiece());
+                highlightAvailableMoves(square[currentY][currentX], square[yToCheck][xToCheck], square[currentY][currentX].getCurrentPiece());
         }
     }
 
