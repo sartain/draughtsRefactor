@@ -161,6 +161,8 @@ public class Board implements ActionListener{ //allows the class to be setup for
         }
     }
 
+    //A move is valid at this point in the game board so we are making the move
+
     public void playMove(int moveFromY, int moveFromX, int moveToY, int moveToX) {
         int piecesToTake = Math.abs(moveFromX - moveToX) - 1;
         Piece pieceToMove = square[moveFromY][moveFromX].getCurrentPiece();
@@ -213,10 +215,10 @@ public class Board implements ActionListener{ //allows the class to be setup for
                         currentY = y;
                         currentX = x;
                         getMoveOptions();
-                    }
-                }
-            }
-        }
-    }
+                    } //End of checking moves
+                }   //End of finding square clicked
+            }   //End of x co-ordinate loop
+        }   //End of y-coordinate loop
+    }   //End of function
 
 }
