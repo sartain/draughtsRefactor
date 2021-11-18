@@ -97,19 +97,16 @@ public class Board implements ActionListener{ //allows the class to be setup for
     }
 
     public void highlightAvailableMoves(Square current, Square next, Piece currentPiece) {
+        boolean moveUpwards = false;
         if((currentPiece == Piece.WHITE || currentPiece == Piece.KINGRED))
-        {
-            highlightMoveIfEmpty(next);
-            if(pieceCanKeepJumping(currentPiece, next)) {
-                highlightAvailableMovesWhilstJumping(current, next, currentPiece, true);
-            }
-        }
+            moveUpwards = true;
         else if((currentPiece == Piece.RED || currentPiece == Piece.KINGWHITE))
-        {
-            highlightMoveIfEmpty(next);
-            if(pieceCanKeepJumping(currentPiece, next)) {
-                highlightAvailableMovesWhilstJumping(current, next, currentPiece, false);
-            }
+            moveUpwards = false;
+        else
+            return;
+        highlightMoveIfEmpty(next);
+        if(pieceCanKeepJumping(currentPiece, next)) {
+            highlightAvailableMovesWhilstJumping(current, next, currentPiece, moveUpwards);
         }
     }
 
